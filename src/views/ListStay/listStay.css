@@ -1,0 +1,11 @@
+.cursor-pointer{
+    cursor: pointer;
+    border-color: transparent;
+    
+}
+
+.image-homestay{
+    border-radius: 1vw;
+    border-bottom-left-radius: 0vw;
+    border-top-right-radius: 0vw;
+}
