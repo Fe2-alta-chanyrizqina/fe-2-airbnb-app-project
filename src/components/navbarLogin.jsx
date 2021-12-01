@@ -1,16 +1,21 @@
 import { Navbar, Nav, Container, NavDropdown, Form, Button, Modal } from 'react-bootstrap'
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
-const Navigation = () => {
+const NavLogin = () => {
     // modal edit event //
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const navigate = useNavigate()
+    const goToTrip = () =>{
+        navigate(`/trips`)
+    }
 
     const returnModalLogin = () => {
         if(show){
             return  <>
-                    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+                    <Modal show={show}  backdrop="static" keyboard={false}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Login</Modal.Title>
                             </Modal.Header>
@@ -43,10 +48,11 @@ const Navigation = () => {
                     <Nav>
                     <Nav.Link href="/homes">Places to stay</Nav.Link>                    
                     <NavDropdown className="me-3" title="User" id="collasible-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Sign up</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2" onClick={()=>handleShow()}>Log in</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.1">Account</NavDropdown.Item>
+                        <NavDropdown.Item href="/trips" >Trip </NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.2" >My home </NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Host your home</NavDropdown.Item>
+                        <NavDropdown.Item href="/" >Log out</NavDropdown.Item>
                     </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
@@ -56,4 +62,4 @@ const Navigation = () => {
             </>
 }
 
-export default Navigation
+export default NavLogin
