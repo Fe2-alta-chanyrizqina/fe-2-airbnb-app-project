@@ -2,13 +2,15 @@ import { useNavigate } from 'react-router-dom'
 import Navigation from "../../components/navbar"
 import { Container, Row, Col, Image, Card } from "react-bootstrap"
 import './listStay.css'
+import Footer from '../../components/footer'
 
 const HomeStay = () => {
     const navigate = useNavigate()
     const goToDetail = (id)=>{
-        navigate(`/home-stay-details/${id}`)
+        navigate(`/rooms/${id}`)
     }
     return <>
+            {/* type: hotel, pool */}
             <Navigation/>
             <Container>
                 <Row xs={1} md={4} className="g-4 mt-5">
@@ -27,6 +29,7 @@ const HomeStay = () => {
                     ))}
                 </Row>
             </Container>
+            <Footer/>
         </>
 }
 
