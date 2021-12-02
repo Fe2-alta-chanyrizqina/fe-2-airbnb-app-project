@@ -1,0 +1,23 @@
+.form{
+    border-radius: 5px;
+    border-color: black;
+}
+
+.confirm {
+    justify-content: end;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.right-text{
+    justify-content: right;
+    text-align: right;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+    color: black;
+}
+.cursor-pointer:hover{
+    color: gray;
+}
