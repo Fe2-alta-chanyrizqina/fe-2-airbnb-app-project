@@ -3,17 +3,17 @@ import './footer.css'
 
 const Footer = () => {
     return  <>
-                <div className="footer mb-3">
+                <div className="footer">
                     <Container>
                         <Row>
-                            <Col>Support</Col>
-                            <Col>Community</Col>
-                            <Col>Hosting</Col>
-                            <Col>About</Col>
+                            <Col md={3} xs={12}><b>Support</b></Col>
+                            <Col md={3} xs={12}><b>Community</b></Col>
+                            <Col md={3} xs={12}><b>Hosting</b></Col>
+                            <Col md={3} xs={12}><b>About</b></Col>
                         </Row>
                         <hr />
                         <Row className="mt-3 pb-5">
-                            <Col>© 2021 Airbnb, Inc. · Privacy · Terms · Sitemap</Col>
+                            <Col>© 2021 Airbnb, Inc.</Col>
                             <Col></Col>
                         </Row>
                     </Container>
