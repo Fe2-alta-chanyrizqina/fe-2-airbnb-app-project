@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const EditMyhomestay = (props) => {
+const AddMyhomestay = (props) => {
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -110,7 +110,7 @@ const EditMyhomestay = (props) => {
       >
         <Modal.Body className="p-5">
           <div>
-            <h3 className="text-center mb-4">Edit My Homestay</h3>
+            <h3 className="text-center mb-4">Add New Homestay</h3>
             {/* Name Homestay */}
             <Form.Group className="mb-2">
               <FloatingLabel label="Name" className="mb-3 mt-3">
@@ -266,7 +266,7 @@ const EditMyhomestay = (props) => {
                 variant="primary"
                 onClick={handleAddnew}
               >
-                Edit Homestay
+                Add New Homestay
               </Button>
             </div>
           </div>
@@ -275,4 +275,4 @@ const EditMyhomestay = (props) => {
     </>
   );
 };
-export default EditMyhomestay;
+export default AddMyhomestay;
