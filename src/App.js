@@ -5,6 +5,11 @@ import HomeStay from './views/ListStay/listStay.jsx'
 import HomeDetails from './views/ListStay/homeDetail';
 import Payment from './views/Payment/payment';
 import Trip from './views/Trip/trip';
+import Login from './components/login';
+import Register from './components/register';
+import ProfileEdit from './views/Profile/profileEdit';
+import Profile from './views/Profile/profile';
+
 
 const App = () => {
   return  <Router>
@@ -14,6 +19,10 @@ const App = () => {
               <Route path="/rooms/:id" element={<HomeDetails/>}/>
               <Route path="/book/stays/:id" element={<Payment/>}/>
               <Route path="/trips" element={<Trip/>}/>
+              <Route path="/login" element={<Login />}/>
+              <Route path="/register" element={<Register />}/>  
+              <Route path="/profile" element={<Profile />}/>
+              <Route path="/profileEdit" element={<ProfileEdit />}/>
             </Routes>
           </Router>
 
