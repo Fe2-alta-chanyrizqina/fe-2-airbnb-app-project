@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-function App() {
+import './App.css';
+import Home from './views/Home/home.jsx'
+import Profile from './views/Profile/profile.jsx'
+import ProfileEdit from './views/Profile/profileEdit.jsx'
+import DetailMyhomestay from './views/MyHomestay/detailMyhomestay'
+import HomeStay from './views/ListStay/listStay.jsx'
+import HomeDetails from './views/ListStay/homeDetail';
+import Payment from './views/Payment/payment';
+import Trip from './views/Trip/trip';
+
+const App = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <BrowserRouter >
+
+    <Routes>
+      <Route path="/" element={<Home/>}/>
+
+      <Route path="/profile/:id" element={<Profile />}/>
+      <Route path="/profileEdit/:id" element={<ProfileEdit />}/>
+
+      <Route path="/homes" element={<HomeStay/>}/>
+      <Route path="/rooms/:id" element={<HomeDetails/>}/>
+      <Route path="/book/stays/:id" element={<Payment/>}/>
+      <Route path="/trips" element={<Trip/>}/>
+
+      <Route path="/myhomes/:id" element={<DetailMyhomestay/>}/>
+
+    </Routes>
+    </BrowserRouter>
   );
 }
 
