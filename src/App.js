@@ -1,20 +1,20 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import React from "react";
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.css';
 import Home from './views/Home/home.jsx'
-import Profile from './views/Profile/profile.jsx'
-import ProfileEdit from './views/Profile/profileEdit.jsx'
-import DetailMyhomestay from './views/MyHomestay/detailMyhomestay'
 import HomeStay from './views/ListStay/listStay.jsx'
 import HomeDetails from './views/ListStay/homeDetail';
 import Payment from './views/Payment/payment';
 import Trip from './views/Trip/trip';
+import Profile from './views/Profile/profile.jsx'
+import ProfileEdit from './views/Profile/profileEdit.jsx'
+import DetailMyhomestay from './views/MyHomestay/detailMyhomestay'
 
 const App = () => {
 
   return (
-  <BrowserRouter >
+  <Router >
 
     <Routes>
       <Route path="/" element={<Home/>}/>
@@ -30,8 +30,11 @@ const App = () => {
       <Route path="/myhomes/:id" element={<DetailMyhomestay/>}/>
 
     </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
+
+}
 export default App;
+
