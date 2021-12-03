@@ -1,11 +1,39 @@
 .cursor-pointer{
     cursor: pointer;
-    border-color: transparent;
-    
+    border-color: black;
+}
+
+.border {
+    border-color: transparent !important;
+    color: black;
+}
+.cursor-pointer:hover{
+    color: gray;
 }
 
 .image-homestay{
     border-radius: 1vw;
-    border-bottom-left-radius: 0vw;
-    border-top-right-radius: 0vw;
+    /* border-bottom-left-radius: 0vw;
+    border-top-right-radius: 0vw; */
+    /* box-shadow: 3px 3px 3px gray; */
+}
+.image-homestay:hover{
+    border-radius: 1vw;
+    /* border-bottom-left-radius: 0vw;
+    border-top-right-radius: 0vw; */
+    box-shadow: 3px 0px 10px gray;
+    transform: scale(1.01)
+}
+.right-text{
+    justify-content: right;
+    text-align: right;
+    font-size: 15px;
+}
+
+.home-name{
+    font-size: 15px;
+    white-space: nowrap; 
+    width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
