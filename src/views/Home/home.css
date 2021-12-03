@@ -3,13 +3,20 @@
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-color: white;
+    border-radius: 0%;
+    zoom: normal;
+    width: 100%;
+    max-zoom: 10px;
+}
+.border {
+    border-radius: 0px;
 }
 
 .center-text {
     position: absolute;
     top: 45%;
     left: 3%;
-    font-size: 4vw;
+    font-size: 5vw;
     color:white;
     text-shadow: 5px 5px 10px black;
 }
@@ -18,14 +25,30 @@
     position: absolute;
     top: 70%;
     left: 3%;
-    font-size: 2vw;
-    border-radius: 5vh;
-    padding-left: 3vw;
-    padding-right: 3vw;
-    box-shadow: 0px 0px 5px lightskyblue;
+    font-size: 3vw;
+    border-radius: 6vh;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    margin-top: 10px;
+    box-shadow: 5px 5px 10px lightskyblue;
 }
 
 .shadow-text {
     text-shadow: 5px 5px 10px black;
     font-size: 6vw;
+}
+
+/* City */
+.city{
+    color: white;
+    background-color: brown;
+    border:unset;
+    border-radius: 5px;
+    
+}
+
+.city-img {
+    border-top-left-radius: 5px ;
+    border-top-right-radius: 5px ;
+    
 }
