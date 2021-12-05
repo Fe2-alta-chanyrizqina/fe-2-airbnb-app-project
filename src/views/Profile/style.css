@@ -22,3 +22,9 @@
   height: 3px;
   background-color: lightgray;
 }
+
+.spinner {
+  margin-top: 50vh;
+  margin-bottom: 50vh;
+  margin-left: 50vw;
+}
