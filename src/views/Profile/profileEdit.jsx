@@ -7,7 +7,7 @@ import {
   Container,
   Button,
   FloatingLabel,
-  Form,
+  Form,=
 } from "react-bootstrap";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 // import NavLogin from '../../components/navbarLogin'

@@ -111,7 +111,6 @@ const HomeStay = () => {
       .then(({ data }) => {
         console.log(data.data);
         setUnique(data.data);
-        // console.log(homes);
       })
       .catch((err) => {
         console.log(err);
@@ -128,7 +127,6 @@ const HomeStay = () => {
       .then(({ data }) => {
         console.log(data.data);
         setBed(data.data);
-        // console.log(homes);
       })
       .catch((err) => {
         console.log(err);

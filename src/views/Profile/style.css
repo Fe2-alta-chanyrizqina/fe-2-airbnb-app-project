@@ -1,0 +1,24 @@
+.profpict {
+  height: 80vh;
+}
+
+.dataProfile .btEdit:hover {
+  background-color: skyblue;
+  outline: skyblue;
+  border: none;
+}
+
+.dataProfile .btEdit:focus {
+  background-color: skyblue;
+  outline: none;
+}
+
+.editProfile .cardDel {
+  /* background-color: skyblue; */
+  box-shadow: black;
+}
+
+.divider {
+  height: 3px;
+  background-color: lightgray;
+}

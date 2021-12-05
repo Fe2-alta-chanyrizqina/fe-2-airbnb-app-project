@@ -16,8 +16,6 @@ import { useNavigate, useParams } from "react-router";
 import "./homeDetails.css";
 
 const Check = (props) => {
-  // const [checkIn, setCheckIn] = useState("");
-  // const [checkOut, setCheckOut] = useState("");
   const [startDate, setStartDate] = useState(null);
 
   const [status, setStatus] = useState("");
