@@ -11,6 +11,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import Navigation from "../../components/navbar";
+import NavLogin from "../../components/navbarLogin";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import axios from "axios";
@@ -18,6 +19,7 @@ import "./homeDetails.css";
 import Footer from "../../components/footer";
 import Check from "./checkAvailablity";
 import Reserve from "./reserveForm";
+import Maps from "./maps";
 
 const HomeDetails = () => {
   const [loading, setLoading] = useState(false);
@@ -32,12 +34,12 @@ const HomeDetails = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://18.188.236.245/homestays/${params.id}`)
+      .get(`http://3.132.11.210/homestays/${params.id}`)
       .then(({ data }) => {
         // console.log(data.data);
         setRoom(data.data);
         setFeatures(data.data.Features);
-        console.log(features);
+        console.log(room);
       })
       .catch((err) => {
         console.log(err.message);
@@ -45,60 +47,53 @@ const HomeDetails = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://18.188.236.245/homestays/${params.id}`)
-  //     .then(({ data }) => {
-  //       // console.log(data.data);
-  //       setRoom(data.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, [room]);
+  }, [localStorage.token]);
 
   // Check Availability //
   const [show, setShow] = useState(true);
   const handleShow = () => setShow(false);
   const returnSwitch = () => {
-    // if (show) {
-    return (
-      <Check handleShow={() => handleShow()} price={room.Price} id={room.ID} />
-    );
-    // }
-    // return <Reserve onClick={() => gotoPayment()} />;
+    if (show) {
+      return (
+        <Check
+          handleShow={() => handleShow()}
+          price={room.Price}
+          id={room.ID}
+        />
+      );
+    }
+    return <Reserve onClick={() => gotoPayment()} />;
   };
 
   if (loading) {
     <Navigation />;
     return <Spinner className="spinner" animation="grow" variant="" />;
   }
+  const navSwitch = () => {
+    if (localStorage.token) {
+      return <NavLogin />;
+    }
+    return <Navigation />;
+  };
 
   return (
     <>
-      <Navigation className="" />
+      {navSwitch()}
       <Container className="mt-5 pt-5">
         <h2 classnameName="title mt-5">{room.Name}</h2>
-        <p>
-          4.32 (34 ulasan) · {room.Type} <br />
+        <p className="sub-text">
+          {/* 4.32 (34 ulasan) · */}
+          {room.Type} <br />
           {room.Address}
         </p>
       </Container>
       <Container>
         <Row className="">
-          <Col xs={12} md={6} className="pb-3">
-            <Image
-              src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"
-              width="100%"
-            ></Image>
+          <Col xs={6} md={6} className="pb-3">
+            <Image src={room.Url} width="100%" className="image-left"></Image>
           </Col>
-          <Col xs={12} md={6} className="pb-3">
-            <Image
-              src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"
-              width="100%"
-            ></Image>
+          <Col xs={6} md={6} className="pb-3">
+            <Image src={room.Url} width="100%" className="image-right"></Image>
           </Col>
           <Col></Col>
         </Row>
@@ -109,7 +104,10 @@ const HomeDetails = () => {
             <Row>
               <Col md={12}>
                 <h3>{room.Name}</h3>
-                <h6>2 guests · 1 bedroom · 1 bed · 1 bath</h6>
+                <h6>
+                  {room.Guests} guests · {room.Bedrooms} bedroom · {room.Beds}{" "}
+                  bed · {room.Bathrooms} bath
+                </h6>
                 <hr />
               </Col>
             </Row>
@@ -130,14 +128,24 @@ const HomeDetails = () => {
             <Row className="mt-5 mb-5">
               <Col md={12}>
                 <h3>Description</h3>
-                <p>{room.Description}</p>
+                <p>
+                  {room.Description}
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Eligendi reprehenderit voluptate sequi quas, odio culpa velit
+                  maxime enim vel dolor rem, ex, dolorum quos? Veritatis libero
+                  ratione ipsam omnis explicabo. Lorem ipsum, dolor sit amet
+                  consectetur adipisicing elit. Velit rem pariatur deserunt
+                  magni. Veniam voluptate, voluptatum dolorem est cumque debitis
+                  quia, laudantium exercitationem mollitia fugiat ipsam aliquid
+                  eum eos accusantium?
+                </p>
                 <hr />
               </Col>
             </Row>
             <Row className="mt-5 mb-5">
               <h3>What this place offers</h3>
               <Col md={12}>
-                <Row xs={1} md={2}>
+                <Row xs={2} md={2}>
                   {features.map((el, idx) => (
                     <Col>
                       <ListGroup variant="flush">
@@ -158,7 +166,10 @@ const HomeDetails = () => {
         <Row className="mt-5 mb-5">
           <Col md={12}>
             <h3>Where you’ll be</h3>
-            <div className="location border"></div>
+            <div className="location border">
+              <Maps room={room} />
+            </div>
+
             <hr />
           </Col>
         </Row>

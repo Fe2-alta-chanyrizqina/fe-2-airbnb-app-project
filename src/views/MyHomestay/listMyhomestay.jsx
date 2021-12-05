@@ -1,63 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Col, Row, Card, Container, Button, Modal } from "react-bootstrap";
-import AddMyhomestay from "./addHomestay.jsx";
+import React from "react";
 
 const ListMyhomestay = () => {
-  const navigate = useNavigate();
 
-  const [showNew, setNewhomestay] = useState(false);
-
-  const goToDetailMyHomestay = (id) => {
-    navigate(`/myhomes/${id}`);
-  };
-
-  return (
-    <div className="w-100 mt-5 row">
-      <div className="col-12 row d-flex justify-content-end align-items-center">
-        <div className="col-9">
-          <h2 classnameName="titleMyhomestay"> My HomeStay</h2>
-        </div>
-        <div className="col-3 d-flex justify-content-end">
-          <Button className="btAddHomey " onClick={() => setNewhomestay(true)}>
-            {" "}
-            Add New Homestay{" "}
-          </Button>
-          <AddMyhomestay show={showNew} close={() => setNewhomestay(false)} />
-        </div>
-      </div>
-
-      <Container>
-        <Row xs={1} md={2} className="g-4 mt-3">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <Col>
-              <Card
-                className="cursor-pointer"
-                onClick={() => goToDetailMyHomestay(idx)}
-              >
-                <div className="col-12 row d-flex justify-content-end align-items-top">
-                  <div className="col-6">
-                    <Card.Img
-                      className="image-homestay"
-                      variant="bottom"
-                      src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"
-                    />
-                  </div>
-                  <div className="col-6 ">
-                    <Card.Body>
-                      <Card.Title>Villa Malang</Card.Title>
-                      <Card.Text>Malang, Jawa Timur</Card.Text>
-                    </Card.Body>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-    </div>
-  );
-};
-
+}
 export default ListMyhomestay;

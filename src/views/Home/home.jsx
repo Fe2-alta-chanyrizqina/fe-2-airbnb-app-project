@@ -3,11 +3,33 @@ import Navigation from "../../components/navbar";
 import NavLogin from "../../components/navbarLogin";
 import Footer from "../../components/footer";
 import "./home.css";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const goToJakarta = () => {
+    navigate(`/homes/location/Jakarta`);
+  };
+  const goToMakassar = () => {
+    navigate(`/homes/location/Makassar`);
+  };
+  const goToBadung = () => {
+    navigate(`/homes/location/Badung`);
+  };
+  const goToPerugia = () => {
+    navigate(`/homes/location/Perugia`);
+  };
+  const navSwitch = () => {
+    if (localStorage.token) {
+      return <NavLogin />;
+    }
+    return <Navigation />;
+  };
   return (
     <>
-      <NavLogin />
+      {navSwitch()}
+
       <Card className="mt-5 border" width="100%">
         <Card.Img
           className="header"
@@ -26,22 +48,71 @@ const Home = () => {
       </Card>
       <Container className="pt-5">
         <h2 className="pb-3">Inspiration for your next trip</h2>
-        <Row xs={2} md={4} className="g-4">
-          {Array.from({ length: 4 }).map((_, idx) => (
-            <Col>
-              <Card className="city pb-5">
-                <Card.Img
-                  className="city-img"
-                  variant="top"
-                  src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
-                />
-                <Card.Body>
-                  <Card.Title>Kuta</Card.Title>
-                  <Card.Text>362 kilometers away</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+        <Row xs={1} md={4} className="g-4">
+          <Col>
+            <Card
+              className="city-jkt pb-5 cursor"
+              onClick={() => goToJakarta()}
+            >
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://www.zenrooms.com/blog/wp-content/uploads/2020/03/jakarta.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Jakarta</Card.Title>
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card
+              className="city-mks pb-5 cursor"
+              onClick={() => goToMakassar()}
+            >
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://cdn-2.tstatic.net/makassar/foto/bank/images/hotel-arthama-losari-makassar-penuh-lampu.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Makassar</Card.Title>
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card
+              className="city-badung pb-5 cursor"
+              onClick={() => goToBadung()}
+            >
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://a0.muscache.com/pictures/a05fe102-021c-4253-a32b-e432720a5918.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Badung</Card.Title>
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card
+              className="city-perugia pb-5 cursor"
+              onClick={() => goToPerugia()}
+            >
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://image.freepik.com/free-photo/aerial-view-san-domenico-basilica-perugia-italy-sunset_261932-4840.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Perugia</Card.Title>
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
         </Row>
       </Container>
       <Container className="pt-5">
@@ -59,7 +130,7 @@ const Home = () => {
           ))}
         </Row>
       </Container>
-      <Card className="text-white mt-5" width="100%">
+      {/* <Card className="text-white mt-5" width="100%">
         <Card.Img
           src="https://hccu.coop/wp-content/uploads/2017/08/VacationClub_HeaderImage.jpg"
           alt="Card image"
@@ -69,7 +140,7 @@ const Home = () => {
             Questions <br /> about <br /> hosting?
           </Card.Title>
         </Card.ImgOverlay>
-      </Card>
+      </Card> */}
       <Footer />
     </>
   );

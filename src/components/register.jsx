@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import swal from "sweetalert";
+
 import axios from "axios";
-import { Button, Modal, Form, FloatingLabel, Spinner } from "react-bootstrap";
+import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Navigation from "./navbar";
-import "./style.css";
 
 const Register = (props) => {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
@@ -30,8 +26,8 @@ const Register = (props) => {
 
   const findFormErrors = () => {
     const newErrors = {};
+    //eslint-disable-next-line
     const regexEmail =
-      // eslint-disable-next-line
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     // name errors
@@ -63,7 +59,6 @@ const Register = (props) => {
       // We got errors!
       setErrors(newErrors);
     } else {
-      setLoading(true);
       const objData = {
         username: name,
         email: email,
@@ -79,37 +74,14 @@ const Register = (props) => {
         .then((response) => {
           console.log(response.data.message);
 
-          swal({
-            text: response.data.message,
-            icon: "success",
-          });
-
-          if (props.close) {
-            props.close();
-          }
+          navigate(`/`);
         })
         .catch((err) => {
-          if (err) {
-            swal("Oh No!", err.message, "error");
-          } else {
-            swal.stopLoading();
-            swal.close();
-          }
-
-          if (props.close) {
-            props.close();
-          }
-        })
-        .finally(() => {
-          setLoading(false);
+          console.log(err);
         });
     }
   };
 
-  if (loading) {
-    <Navigation />;
-    return <Spinner className="spinner" animation="grow" variant="" />;
-  }
   return (
     <>
       <Modal
@@ -119,7 +91,6 @@ const Register = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={props.show}
-        // cancel = {props.close}
       >
         <Modal.Body className="p-5">
           <div>

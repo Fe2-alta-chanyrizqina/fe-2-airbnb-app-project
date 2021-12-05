@@ -1,20 +1,14 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, FloatingLabel, Spinner } from "react-bootstrap";
+import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import swal from "sweetalert";
-import Navigation from "./navbar";
-import "./style.css";
+// import "./login.css";
 
 const Login = (props) => {
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
-
-  const { email, password } = form;
 
   const setField = (field, value) => {
     setForm({
@@ -30,8 +24,10 @@ const Login = (props) => {
   };
 
   const findFormErrors = () => {
+    const { email, password } = form;
+
+    //eslint-disable-next-line
     const regexEmail =
-      // eslint-disable-next-line
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     const newErrors = {};
@@ -41,6 +37,7 @@ const Login = (props) => {
       newErrors.email = "email is not valid!";
     // password errors
     if (!password || password === "") newErrors.password = "cannot be blank!";
+    else if (password.length < 4) newErrors.password = "comment is too short!";
     return newErrors;
   };
 
@@ -48,12 +45,12 @@ const Login = (props) => {
     e.preventDefault();
 
     const newErrors = findFormErrors();
-
+    // Conditional logic:
     if (Object.keys(newErrors).length > 0) {
       // We got errors!
       setErrors(newErrors);
     } else {
-      setLoading(true);
+      const { email, password } = form;
 
       const objData = {
         email: email,
@@ -65,6 +62,7 @@ const Login = (props) => {
       axios
         .post("http://3.132.11.210/login", objData)
         .then((response) => {
+          const message = response.data.message;
           console.log(response.data.token);
           console.log(response.data.message);
           console.log(response.data.status);
@@ -74,35 +72,17 @@ const Login = (props) => {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id", response.data.id);
           localStorage.setItem("name", response.data.name);
+          alert(response.data.message);
 
-          swal("Yaaay!", response.data.message, "success");
-
-          if (props.close) {
-            props.close();
-          }
+          navigate(`/`);
+          props.close();
         })
         .catch((err) => {
-          if (err) {
-            swal("Oh No!", err.message, "error");
-          } else {
-            swal.stopLoading();
-            swal.close();
-          }
-
-          if (props.close) {
-            props.close();
-          }
-        })
-        .finally(() => {
-          setLoading(false);
+          console.log(err);
         });
     }
   };
 
-  if (loading) {
-    <Navigation />;
-    return <Spinner className="spinner" animation="grow" variant="" />;
-  }
   return (
     <>
       <Modal
@@ -114,7 +94,7 @@ const Login = (props) => {
         centered
         show={props.show}
       >
-        <Modal.Body className="p-5 transparent-style">
+        <Modal.Body className="p-5">
           <div>
             <h3 className="text-center mb-4">Login</h3>
             <Form.Group className="mb-2">

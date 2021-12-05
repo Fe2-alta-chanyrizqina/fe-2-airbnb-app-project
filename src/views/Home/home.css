@@ -32,6 +32,9 @@
     margin-top: 10px;
     box-shadow: 5px 5px 10px lightskyblue;
 }
+.center-button:hover{
+    transform: scale(1.01);
+}
 
 .shadow-text {
     text-shadow: 5px 5px 10px black;
@@ -39,16 +42,41 @@
 }
 
 /* City */
-.city{
-    color: white;
-    background-color: brown;
-    border:unset;
-    border-radius: 5px;
-    
+.city-img{
+    border-top-left-radius: 5px ;
+    border-top-right-radius: 5px ;  
+    height: 30vh;
 }
 
-.city-img {
-    border-top-left-radius: 5px ;
-    border-top-right-radius: 5px ;
-    
+.city-jkt {
+    color: white;
+    background-color:orangered;
+    border:unset;
+    border-radius: 5px;
+}
+.city-mks {
+    color: white;
+    background-color:brown;
+    border:unset;
+    border-radius: 5px;
+}
+.city-badung {
+    color: white;
+    background-color:chocolate;
+    border:unset;
+    border-radius: 5px;
+}
+.city-perugia {
+    color: white;
+    background-color:goldenrod;
+    border:unset;
+    border-radius: 5px;
+}
+.cursor{
+    cursor: pointer;
+}
+.cursor:hover{
+    cursor: pointer;
+    color: black;
+    transform: scale(1.01) ;
 }
