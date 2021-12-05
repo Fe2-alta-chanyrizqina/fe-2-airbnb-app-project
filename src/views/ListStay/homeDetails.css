@@ -2,3 +2,30 @@
     margin-right: 10vw !important;
     margin-top: 10vw;
 }
+
+.fix{
+    position: -webkit-sticky; /* Safari & IE */
+    position: sticky;
+    top:100px;
+    margin-top: 10px;
+    margin-bottom: 70px;
+}
+
+.location {
+    border: gray;
+    height: 400px;
+    width: 100%;
+}
+
+.spinner {
+    margin-top: 50vh;
+    margin-left: 50vw;
+}
+
+.right-text {
+    justify-content: end;
+    text-align: end;
+    align-items: flex-end;
+}
+
+
