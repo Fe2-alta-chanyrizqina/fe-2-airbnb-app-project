@@ -22,6 +22,10 @@
     margin-left: 50vw;
 }
 
-
+.right-text {
+    justify-content: end;
+    text-align: end;
+    align-items: flex-end;
+}
 
 

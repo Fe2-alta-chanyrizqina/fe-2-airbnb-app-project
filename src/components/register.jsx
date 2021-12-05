@@ -78,7 +78,6 @@ const Register = (props) => {
         .post("http://3.132.11.210/register", objData)
         .then((response) => {
           console.log(response.data.message);
-
           swal({
             text: response.data.message,
             icon: "success",
@@ -119,7 +118,6 @@ const Register = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={props.show}
-        // cancel = {props.close}
       >
         <Modal.Body className="p-5">
           <div>

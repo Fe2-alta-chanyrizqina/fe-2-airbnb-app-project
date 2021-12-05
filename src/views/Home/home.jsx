@@ -3,11 +3,23 @@ import Navigation from "../../components/navbar";
 import NavLogin from "../../components/navbarLogin";
 import Footer from "../../components/footer";
 import "./home.css";
+import { useNavigate } from "react-router";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const goToHome = () => {
+    navigate(`/homes/location/Jakarta`);
+  };
+  const navSwitch = () => {
+    if (localStorage.token) {
+      return <NavLogin />;
+    }
+    return <Navigation />;
+  };
   return (
     <>
-      <NavLogin />
+      {navSwitch()}
+
       <Card className="mt-5 border" width="100%">
         <Card.Img
           className="header"
@@ -26,22 +38,62 @@ const Home = () => {
       </Card>
       <Container className="pt-5">
         <h2 className="pb-3">Inspiration for your next trip</h2>
-        <Row xs={2} md={4} className="g-4">
-          {Array.from({ length: 4 }).map((_, idx) => (
-            <Col>
-              <Card className="city pb-5">
-                <Card.Img
-                  className="city-img"
-                  variant="top"
-                  src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
-                />
-                <Card.Body>
-                  <Card.Title>Kuta</Card.Title>
-                  <Card.Text>362 kilometers away</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+        <Row xs={1} md={4} className="g-4">
+          <Col>
+            <Card
+              className="city pb-5 cursor-pointer"
+              onClick={() => goToHome()}
+            >
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Jakarta</Card.Title>
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="city pb-5">
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Kuta</Card.Title>
+                <Card.Text>362 kilometers away</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="city pb-5">
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Kuta</Card.Title>
+                <Card.Text>362 kilometers away</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="city pb-5">
+              <Card.Img
+                className="city-img"
+                variant="top"
+                src="https://a.cdn-hotels.com/gdcs/production30/d1534/252e446f-0cfb-4318-a888-9d71834de4ba.jpg"
+              />
+              <Card.Body>
+                <Card.Title>Kuta</Card.Title>
+                <Card.Text>362 kilometers away</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
         </Row>
       </Container>
       <Container className="pt-5">

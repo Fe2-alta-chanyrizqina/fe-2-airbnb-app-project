@@ -18,6 +18,7 @@ import "./homeDetails.css";
 import Footer from "../../components/footer";
 import Check from "./checkAvailablity";
 import Reserve from "./reserveForm";
+import Maps from "./maps";
 
 const HomeDetails = () => {
   const [loading, setLoading] = useState(false);
@@ -32,12 +33,12 @@ const HomeDetails = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://18.188.236.245/homestays/${params.id}`)
+      .get(`http://3.132.11.210/homestays/${params.id}`)
       .then(({ data }) => {
         // console.log(data.data);
         setRoom(data.data);
         setFeatures(data.data.Features);
-        console.log(features);
+        console.log(room);
       })
       .catch((err) => {
         console.log(err.message);
@@ -47,28 +48,20 @@ const HomeDetails = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://18.188.236.245/homestays/${params.id}`)
-  //     .then(({ data }) => {
-  //       // console.log(data.data);
-  //       setRoom(data.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, [room]);
-
   // Check Availability //
   const [show, setShow] = useState(true);
   const handleShow = () => setShow(false);
   const returnSwitch = () => {
-    // if (show) {
-    return (
-      <Check handleShow={() => handleShow()} price={room.Price} id={room.ID} />
-    );
-    // }
-    // return <Reserve onClick={() => gotoPayment()} />;
+    if (show) {
+      return (
+        <Check
+          handleShow={() => handleShow()}
+          price={room.Price}
+          id={room.ID}
+        />
+      );
+    }
+    return <Reserve onClick={() => gotoPayment()} />;
   };
 
   if (loading) {
@@ -88,17 +81,11 @@ const HomeDetails = () => {
       </Container>
       <Container>
         <Row className="">
-          <Col xs={12} md={6} className="pb-3">
-            <Image
-              src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"
-              width="100%"
-            ></Image>
+          <Col xs={6} md={6} className="pb-3">
+            <Image src={room.Url} width="100%"></Image>
           </Col>
-          <Col xs={12} md={6} className="pb-3">
-            <Image
-              src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"
-              width="100%"
-            ></Image>
+          <Col xs={6} md={6} className="pb-3">
+            <Image src={room.Url} width="100%"></Image>
           </Col>
           <Col></Col>
         </Row>
@@ -109,7 +96,10 @@ const HomeDetails = () => {
             <Row>
               <Col md={12}>
                 <h3>{room.Name}</h3>
-                <h6>2 guests · 1 bedroom · 1 bed · 1 bath</h6>
+                <h6>
+                  {room.Guests} guests · {room.Bedrooms} bedroom · {room.Beds}{" "}
+                  bed · {room.Bathrooms} bath
+                </h6>
                 <hr />
               </Col>
             </Row>
@@ -137,7 +127,7 @@ const HomeDetails = () => {
             <Row className="mt-5 mb-5">
               <h3>What this place offers</h3>
               <Col md={12}>
-                <Row xs={1} md={2}>
+                <Row xs={2} md={2}>
                   {features.map((el, idx) => (
                     <Col>
                       <ListGroup variant="flush">
@@ -158,7 +148,10 @@ const HomeDetails = () => {
         <Row className="mt-5 mb-5">
           <Col md={12}>
             <h3>Where you’ll be</h3>
-            <div className="location border"></div>
+            <div className="location border">
+              <Maps room={room} />
+            </div>
+
             <hr />
           </Col>
         </Row>

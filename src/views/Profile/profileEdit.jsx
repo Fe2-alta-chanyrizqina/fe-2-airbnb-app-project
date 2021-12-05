@@ -7,14 +7,12 @@ import {
   Container,
   Button,
   FloatingLabel,
-  Form,
-  OverlayTrigger,
-  Tooltip,
+  Form,=
 } from "react-bootstrap";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 // import NavLogin from '../../components/navbarLogin'
 // import Footer from '../../components/footer'
-import "./style.css";
+// import "./style.css";
 
 const ProfileEdit = () => {
   const navigate = useNavigate();
@@ -168,13 +166,7 @@ const ProfileEdit = () => {
             <p>By deleting your account, you will lose all your data</p>
           </Col>
           <div className="col-2 d-flex justify-content-start align-items-center">
-            <OverlayTrigger
-              overlay={
-                <Tooltip id="tooltip-disabled">Are you sure ? :"( </Tooltip>
-              }
-            >
-              <Button className="btEdit "> Delete </Button>
-            </OverlayTrigger>
+            <Button className="btEdit "> Delete </Button>
           </div>
         </Card.Body>
       </Card>

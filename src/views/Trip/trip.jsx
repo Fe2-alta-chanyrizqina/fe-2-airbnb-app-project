@@ -8,14 +8,58 @@ import {
   FloatingLabel,
   Modal,
 } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavLogin from "../../components/navbarLogin";
 import Footer from "../../components/footer";
+import axios from "axios";
 import "./trip.css";
+import { Navigate, useNavigate } from "react-router";
 
 const Trip = () => {
+  const [reservations, setReservations] = useState([]);
+  const [ID, setID] = useState("");
+  const [checkin, setCheckin] = useState("");
+  const [checkout, setCheckout] = useState("");
   const [modalShow, setModalShow] = useState(false);
-  function confirmationDelete() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.token}` },
+    };
+    // console.log(config);
+    axios
+      .get("http://3.132.11.210/reservations", config)
+      .then(({ data }) => {
+        setReservations(data.data);
+        // console.log(reservations);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        navigate(`/`);
+        return <>You must log in first</>;
+      });
+  }, [reservations]);
+
+  const deleteTrip = (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    };
+    console.log(id);
+    // return;
+    axios
+      .delete(`http://3.132.11.210/reservations/${id}`, config)
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const confirmationDelete = () => {
     return (
       <Modal
         size="lg"
@@ -34,20 +78,29 @@ const Trip = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setModalShow(false)}>No</Button>
-          <Button>Yes</Button>
+          <Button
+            onClick={() => {
+              console.log(ID);
+              deleteTrip(ID);
+              setModalShow(false);
+            }}
+          >
+            Yes
+          </Button>
         </Modal.Footer>
       </Modal>
     );
-  }
+  };
+
   return (
     <>
       <NavLogin />
       <Container>
         <h2 className="mt-5 pt-5">Trip</h2>
         <hr className="line" />
-        {Array.from({ length: 4 }).map((_, idx) => (
+        {reservations.map((el, idx) => (
           <Card className="mb-5">
-            <Card.Header>Villa Bali</Card.Header>
+            <Card.Header>{el.Name}</Card.Header>
             <Card.Body>
               {/* <Card.Title>Special title treatment</Card.Title> */}
               <Card.Text>
@@ -60,7 +113,7 @@ const Trip = () => {
                       <Form.Control
                         type="date"
                         placeholder="2021-11-12"
-                        value="2021-11-12"
+                        value={el.Check_In.slice(0, 10)}
                         readOnly
                       />
                     </FloatingLabel>
@@ -73,7 +126,7 @@ const Trip = () => {
                       <Form.Control
                         type="date"
                         placeholder="name@example.com"
-                        value="2021-11-14"
+                        value={el.Check_Out.slice(0, 10)}
                         readOnly
                       />
                     </FloatingLabel>
@@ -82,15 +135,17 @@ const Trip = () => {
                 <Row>
                   <Col md={12} className="mt-3">
                     <Row>
-                      <Col> $36 X 2 malam</Col>
-                      <Col className="right-text"> $72</Col>
+                      <Col>
+                        Rp {el.Price} X {el.Long_Stay} night(s)
+                      </Col>
+                      <Col className="right-text">Rp {el.Total_Price}</Col>
                       <hr />
                       <Col>
                         {" "}
                         <b>Total</b>{" "}
                       </Col>
                       <Col className="right-text">
-                        <b>$72</b>{" "}
+                        <b>Rp {el.Total_Price}</b>{" "}
                       </Col>
                     </Row>
                   </Col>
@@ -98,7 +153,10 @@ const Trip = () => {
               </Card.Text>
               <Button
                 className="right-btn"
-                onClick={() => setModalShow(true)}
+                onClick={() => {
+                  setID(el.ID);
+                  setModalShow(true);
+                }}
                 variant="danger"
               >
                 Cancel
@@ -112,5 +170,4 @@ const Trip = () => {
     </>
   );
 };
-
 export default Trip;

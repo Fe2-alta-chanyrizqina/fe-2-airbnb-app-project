@@ -9,6 +9,8 @@ import Login from './components/login';
 import Register from './components/register';
 import ProfileEdit from './views/Profile/profileEdit';
 import Profile from './views/Profile/profile';
+import HomeStayLocation from './views/ListStay/ListByLocation';
+import "react-datepicker/dist/react-datepicker.css"
 
 
 const App = () => {
@@ -16,6 +18,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home/>}/>
               <Route path="/homes" element={<HomeStay/>}/>
+              <Route path="/homes/location/:location" element={<HomeStayLocation/>}/>
               <Route path="/rooms/:id" element={<HomeDetails/>}/>
               <Route path="/book/stays/:id" element={<Payment/>}/>
               <Route path="/trips" element={<Trip/>}/>
