@@ -3,3 +3,14 @@
     color: black;
 
 }
+
+.right-text {
+    justify-content: end;
+    text-align: end;
+    align-items: flex-end;
+}
+
+.right-btn {
+    width: 100%;
+
+}

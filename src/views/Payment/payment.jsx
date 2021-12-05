@@ -1,6 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import { useState } from "react";
 import {
   Container,
   Navbar,
@@ -10,43 +8,91 @@ import {
   Form,
   Button,
   Card,
+  Spinner,
 } from "react-bootstrap";
 import { MdOutlineArrowBackIos } from "react-icons/md";
+import axios from "axios";
 import "./payment.css";
 import Footer from "../../components/footer";
+import { useState, useEffect } from "react";
 
 const Payment = () => {
-  const [form, setForm] = useState({});
-  const [errors, setErrors] = useState({});
-
+  const [room, setRoom] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [id, setId] = useState();
+  // const [type, setType] = useState();
+  // const [name, setName] = useState();
+  // const [cvv, setCVV] = useState();
+  // const [month, setMonth] = useState();
+  // const [year, setYear] = useState();
+  // const [number, setNumber] = useState();
   const navigate = useNavigate();
   const params = useParams();
 
-  const goToRoom = () => {
-    navigate(`/rooms/${params.id}`);
-  };
-  const gotoHome = () => {
-    navigate(`/`);
-  };
+  const [form, setForm] = useState({});
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://3.132.11.210/homestays/${params.id}`)
+      .then(({ data }) => {
+        // console.log(data.data);
+        setRoom(data.data);
+        console.log(room);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const { checkIn, checkOut, type, name, cvv, year, month, number } = form;
-  const config = {
-    header: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
+
+  const addReservation = () => {
+    const config = {
+      header: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    };
+    const body = {
+      homestayid: 1,
+      checkin: localStorage.check_in,
+      checkout: localStorage.check_out,
+      payment: {
+        type,
+        name,
+        cvv: parseInt(cvv),
+        month,
+        year,
+        number,
+      },
+    };
+    axios
+      .post("http://3.132.11.210/reservations", body, config)
+      .then((data) => {
+        // console.log(data);
+        navigate(`/trips`);
+        localStorage.removeItem("check_in");
+        localStorage.removeItem("check_out");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
-  const body = {
-    homestayid: params.id,
-    checkin: checkIn,
-    checkout: checkOut,
-    payment: {
-      type: type,
-      name: name,
-      cvv: cvv,
-      month: month,
-      year: year,
-      number: number,
-    },
+
+  const goToRoom = () => {
+    navigate(`/rooms/${params.id}`);
+    localStorage.removeItem("check_in");
+    localStorage.removeItem("check_out");
+  };
+
+  const goToTrip = () => {
+    navigate(`/trips`);
+    localStorage.removeItem("check_in");
+    localStorage.removeItem("check_out");
   };
 
   const setField = (field, value) => {
@@ -94,21 +140,43 @@ const Payment = () => {
     if (Object.keys(newErrors).length > 0) {
       // We got errors!
       setErrors(newErrors);
-
-      console.log(body);
-    } else {
-      axios
-        .post("http://18.188.236.245//reservations", config, body)
-        .then((data) => {
-          console.log(data.data);
-          console.log(body);
-          gotoHome();
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
     }
+    const config = {
+      header: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    };
+
+    const body = {
+      homestayid: parseInt(params.id),
+      checkin: localStorage.check_in,
+      checkout: localStorage.check_out,
+      payment: {
+        type: type,
+        name: name,
+        cvv: parseInt(cvv),
+        month: month,
+        year: year,
+        number: number,
+      },
+    };
+    console.log(body, "body", localStorage.token);
+    axios
+      .post("http://3.132.11.210/reservations", body, config)
+      .then((data) => {
+        console.log(data.data);
+        // console.log(body);
+        goToTrip();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
+
+  if (loading) {
+    <Navbar expand="lg" variant="light" bg="light" fixed="top"></Navbar>;
+    return <Spinner className="spinner" animation="grow" variant="" />;
+  }
 
   return (
     <>
@@ -118,7 +186,7 @@ const Payment = () => {
         </Container>
       </Navbar>
       <Container className="mt-5 pt-5">
-        <h2 classnameName="title mt-5">
+        <h2 classnameName="title">
           {" "}
           <a className="cursor-pointer" onClick={() => goToRoom()}>
             <MdOutlineArrowBackIos />
@@ -126,10 +194,10 @@ const Payment = () => {
           Payment & Confirm
         </h2>
       </Container>
-      <Container className="mt-5">
+      <Container className="">
         <Row>
-          <h5>Credit Card</h5>
-          <Col md={7} className="p-1 mb-2 form pe-5">
+          <Col md={6} sm={{ order: 2 }} xs={{ order: 2 }} className=" form">
+            <h5 className="mt-5">Credit Card</h5>
             <Row>
               <Col md={12}>
                 <FloatingLabel controlId="floatingSelect" label="Type">
@@ -142,9 +210,9 @@ const Payment = () => {
                     feedbackType="invalid"
                   >
                     <option value="">- choose type -</option>
-                    <option value="Master Card">Master Card</option>
-                    <option value="Visa">Visa</option>
-                    <option value="American Express">American Express</option>
+                    <option value="master card">Master Card</option>
+                    <option value="visa">Visa</option>
+                    <option value="american express">American Express</option>
                   </Form.Select>
                 </FloatingLabel>
               </Col>
@@ -170,11 +238,8 @@ const Payment = () => {
               </Col>
             </Row>
             <Row>
-              <Col ms={8}>
-                <FloatingLabel
-                  controlId="floatingCardnumber"
-                  label="Card number"
-                >
+              <Col ms={8} sm={8} xs={8}>
+                <FloatingLabel controlId="floatingPassword" label="Card number">
                   <Form.Control
                     type="text"
                     placeholder="Card number"
@@ -187,8 +252,8 @@ const Payment = () => {
                   </Form.Control.Feedback>
                 </FloatingLabel>
               </Col>
-              <Col md={4}>
-                <FloatingLabel controlId="floatingCVV" label="CVV">
+              <Col md={4} sm={12} xs={12}>
+                <FloatingLabel controlId="floatingPassword" label="CVV">
                   <Form.Control
                     type="number"
                     placeholder="CVV"
@@ -203,7 +268,7 @@ const Payment = () => {
               </Col>
             </Row>
             <Row>
-              <Col md={4}>
+              <Col md={4} sm={4} xs={4}>
                 <Form>
                   <Form.Group
                     className="mt-4 ms-2 g-3"
@@ -219,16 +284,19 @@ const Payment = () => {
                   label="Month"
                   className="mt-3"
                 >
-                  <Form.Control
-                    type="number"
-                    placeholder="Month"
+                  <Form.Select
+                    aria-label="Floating label select example"
                     onChange={(e) => setField("month", e.target.value)}
                     required
                     isInvalid={!!errors.month}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.month}
-                  </Form.Control.Feedback>
+                    feedback={errors.month}
+                    feedbackType="invalid"
+                  >
+                    <option>Select month</option>
+                    {Array.from({ length: 12 }).map((_, idx) => (
+                      <option value={idx + 1}>{idx + 1}</option>
+                    ))}
+                  </Form.Select>
                 </FloatingLabel>
               </Col>
               <Col md={4} sm={4} xs={4}>
@@ -237,16 +305,19 @@ const Payment = () => {
                   label="Year"
                   className="mt-3"
                 >
-                  <Form.Control
-                    type="number"
-                    placeholder="Year"
+                  <Form.Select
+                    aria-label="Floating label select example"
                     onChange={(e) => setField("year", e.target.value)}
                     required
                     isInvalid={!!errors.year}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.year}
-                  </Form.Control.Feedback>
+                    feedback={errors.year}
+                    feedbackType="invalid"
+                  >
+                    <option>Select year</option>
+                    {Array.from({ length: 10 }).map((_, idx) => (
+                      <option value={idx + 21}>{idx + 2021}</option>
+                    ))}
+                  </Form.Select>
                 </FloatingLabel>
               </Col>
               <Col md={12}>
@@ -262,7 +333,8 @@ const Payment = () => {
               </Col>
             </Row>
           </Col>
-          <Col md={5}>
+          <Col md={6} sm={{ order: 1 }} xs={{ order: 1 }}>
+            <h5 className="mt-5">Your Homestay</h5>
             <Card>
               <Card.Body>
                 <Row>
@@ -270,61 +342,61 @@ const Payment = () => {
                     <Card.Img src="https://media-cdn.tripadvisor.com/media/photo-s/11/cd/50/ef/kampoong-homestay-malang.jpg"></Card.Img>
                   </Col>
                   <Col>
-                    <Card.Title>Villa Malang</Card.Title>
+                    <Card.Title>{room.Name}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">
-                      Card Subtitle
+                      {room.Type}
+                    </Card.Subtitle>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      Rp {room.Price} / Night
                     </Card.Subtitle>
                   </Col>
                 </Row>
                 <Card.Text>
                   <Row className="g-3 mt-1">
-                    <Col md={6} sm={6} xs={6}>
+                    <Col md={6} sm={6} xs={12}>
                       <FloatingLabel
                         controlId="floatingInputGrid"
-                        label="Check-in"
+                        label="Check in"
                       >
                         <Form.Control
                           type="date"
-                          placeholder="Check-in"
-                          onChange={(e) => setField("checkIn", e.target.value)}
-                          required
-                          isInvalid={!!errors.checkIn}
+                          placeholder="2021-12-01"
+                          value={localStorage.check_in}
+                          readOnly
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.checkIn}
-                        </Form.Control.Feedback>
                       </FloatingLabel>
                     </Col>
-                    <Col md={6} sm={6} xs={6}>
+                    <Col md={6} sm={6} xs={12}>
                       <FloatingLabel
                         controlId="floatingSelectGrid"
-                        label="Check-out"
+                        label="Check out"
                       >
                         <Form.Control
                           type="date"
-                          placeholder="Check-out"
-                          onChange={(e) => setField("checkOut", e.target.value)}
-                          required
-                          isInvalid={!!errors.checkOut}
+                          placeholder="12-01-2021"
+                          value={localStorage.check_out}
+                          readOnly
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.checkOut}
-                        </Form.Control.Feedback>
                       </FloatingLabel>
                     </Col>
                   </Row>
                   <Row>
                     <Col md={11} className="m-3 pr-3">
                       <Row>
-                        <Col> $36 X 2 nights</Col>
-                        <Col className="right-text"> $72</Col>
+                        <Col>
+                          Rp {room.Price} X {localStorage.long_stay} night(s)
+                        </Col>
+                        <Col className="right-text">
+                          {" "}
+                          Rp {localStorage.total_price}
+                        </Col>
                         <hr className="ml-2" />
                         <Col>
                           {" "}
                           <b>Total Price :</b>{" "}
                         </Col>
                         <Col className="right-text">
-                          <b>$72</b>{" "}
+                          <b>Rp {localStorage.total_price}</b>{" "}
                         </Col>
                       </Row>
                     </Col>

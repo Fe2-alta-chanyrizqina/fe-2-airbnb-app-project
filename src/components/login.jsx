@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./login.css";
+// import "./login.css";
 
 const Login = (props) => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const Login = (props) => {
       console.log(objData);
 
       axios
-        .post("http://18.188.236.245/login", objData)
+        .post("http://3.132.11.210/login", objData)
         .then((response) => {
           const message = response.data.message;
           console.log(response.data.token);
@@ -72,14 +72,10 @@ const Login = (props) => {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id", response.data.id);
           localStorage.setItem("name", response.data.name);
-
-          if (props.close) {
-            props.close();
-          }
-
           alert(response.data.message);
 
-          // navigate(`/`);
+          navigate(`/`);
+          props.close();
         })
         .catch((err) => {
           console.log(err);

@@ -70,15 +70,11 @@ const Register = (props) => {
       console.log(objData);
 
       axios
-        .post("http://18.188.236.245/register", objData)
+        .post("http://3.132.11.210/register", objData)
         .then((response) => {
           console.log(response.data.message);
 
-          if (props.close) {
-            props.close();
-          }
-
-          alert(response.data.message);
+          navigate(`/`);
         })
         .catch((err) => {
           console.log(err);
@@ -95,7 +91,6 @@ const Register = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={props.show}
-        // cancel = {props.close}
       >
         <Modal.Body className="p-5">
           <div>
