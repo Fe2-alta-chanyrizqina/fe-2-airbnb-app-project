@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Col, Row, Card, Container, Button, Modal } from "react-bootstrap";
+import { Col, Row, Card, Container, Button, Spinner } from "react-bootstrap";
 import AddMyhomestay from "./addHomestay.jsx";
+import "./style.css";
 
 const ListMyhomestay = () => {
   const navigate = useNavigate();
 
   const [showNew, setNewhomestay] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [homes, setHomes] = useState([]);
 
   const goToDetailMyHomestay = (id) => {
     navigate(`/myhomes/${id}`);
   };
 
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("http://3.132.11.210/homestays/my")
+      .then(({ data }) => {
+        console.log(data.data);
+        setHomes(data.data);
+        // console.log(homes);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    // <Navigation />;
+    return <Spinner className="spinner" animation="grow" variant="" />;
+  }
   return (
     <div className="w-100 mt-5 row">
       <div className="col-12 row d-flex justify-content-end align-items-center">
@@ -30,11 +54,12 @@ const ListMyhomestay = () => {
 
       <Container>
         <Row xs={1} md={2} className="g-4 mt-3">
-          {Array.from({ length: 6 }).map((_, idx) => (
+          {homes.map((el, idx) => (
             <Col>
               <Card
                 className="cursor-pointer"
-                onClick={() => goToDetailMyHomestay(idx)}
+                onClick={() => goToDetailMyHomestay(el.ID)}
+                key={idx}
               >
                 <div className="col-12 row d-flex justify-content-end align-items-top">
                   <div className="col-6">
@@ -46,8 +71,11 @@ const ListMyhomestay = () => {
                   </div>
                   <div className="col-6 ">
                     <Card.Body>
-                      <Card.Title>Villa Malang</Card.Title>
-                      <Card.Text>Malang, Jawa Timur</Card.Text>
+                      <Card.Title>{el.Name}</Card.Title>
+                      <Row>
+                        <Col className="">{el.Type}</Col>
+                        <Col className="right-text">Rp {el.Price}</Col>
+                      </Row>
                     </Card.Body>
                   </div>
                 </div>

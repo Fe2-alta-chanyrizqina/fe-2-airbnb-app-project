@@ -13,8 +13,30 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const EditMyhomestay = (props) => {
+  const params = useParams();
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
+
+  const [showEdit, setShowEdit] = useState(false);
+  const handleCloseEdit = () => setShowEdit(false);
+
+  const [namedb, getname] = useState({});
+  const [addressdb, getaddress] = useState({});
+  const [descriptiondb, getdescription] = useState({});
+  const [facilitydb, getfacility] = useState({});
+  const [pricedb, getprice] = useState({});
+  const [typedb, gettype] = useState({});
+
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState();
+
+  const navigate = useNavigate();
+  const { name, address, description, facility, price, type } = form;
+
+  const onImageUpload = (e) => {
+    console.log(e.target.files[0]);
+    setFile(e.target.files[0]);
+  };
 
   const { name, address, description, facility, price, type } = form;
 
@@ -33,31 +55,31 @@ const EditMyhomestay = (props) => {
 
   const findFormErrors = () => {
     const newErrors = {};
-    // email errors
+    // name errors
     if (!name || name === "") newErrors.name = "cannot be blank!";
-    // password errors
+    // address errors
     if (!address || address === "") newErrors.address = "cannot be blank!";
     // description errors
-    if (!description || description === "")
+    if (!description || description === "") {
       newErrors.description = "cannot be blank!";
+    }
     // price errors
     if (!price || price === "") newErrors.price = "cannot be blank!";
     // feature errors
-    if (!facility || facility === "") newErrors.facility = "cannot be blank!";
+    // if (!facility || facility === "") newErrors.facility = "cannot be blank!";
     // type errors
     if (!type || type === "") newErrors.type = "cannot be blank!";
     return newErrors;
   };
 
-  const handleAddnew = (e) => {
-    e.preventDefault();
-
+  const handleShowEdit = () => {
     const newErrors = findFormErrors();
     // Conditional logic:
     if (Object.keys(newErrors).length > 0) {
       // We got errors!
       setErrors(newErrors);
     } else {
+      facility = [1, 2, 3];
       const objData = {
         name: name,
         type: type,
@@ -65,37 +87,106 @@ const EditMyhomestay = (props) => {
         facility: facility,
         price: price,
         address: address,
+        file: file,
       };
 
+      const data = new FormData();
+      data.append("name", name);
+      data.append("type", type);
+      data.append("description", description);
+      data.append("price", price);
+      data.append("address", address);
+      data.append("file", file);
+
       console.log(objData);
+      console.log(data);
 
-      // axios
-      //   .post("http://18.188.236.245/login", objData)
-      //   .then((response) => {
-      //     const message = response.data.message;
-      //     console.log(response.data.token);
-      //     console.log(response.data.message);
-      //     console.log(response.data.status);
-      //     console.log(response.data.id);
-      //     console.log(response.data.name);
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
 
-      //     localStorage.setItem("token", response.data.token);
-      //     localStorage.setItem("id", response.data.id);
-      //     localStorage.setItem("name", response.data.name);
+      axios
+        .put(`http://3.132.11.210/homestays/${params.id}`, data, config)
+        .then((response) => {
+          console.log(response.data.Type);
+          console.log(response.data.Description);
+          console.log(response.data.Price);
+          console.log(response.data.Address);
+          console.log(response.data.Features);
+          console.log(response.data.Url);
+          console.log(response.message);
+          console.log(response.data.message);
 
-      //     if (props.close) {
-      //       props.close();
-      //     }
+          swal({
+            text: response.data.message,
+            icon: "success",
+          });
 
-      //     alert(response.data.message);
+          navigate(`/profile`);
 
-      //     // navigate(`/`);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+          if (props.close) {
+            props.close();
+          }
+        })
+        .catch((err) => {
+          if (err) {
+            swal("Oh No!", err.message, "error");
+          } else {
+            swal.stopLoading();
+            swal.close();
+          }
+
+          if (props.close) {
+            props.close();
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
+
+  useEffect(() => getAllData(), []);
+
+  const getAllData = () => {
+    setLoading(true);
+    axios
+      .get(`http://3.132.11.210/homestays/${params.id}`, config)
+      .then((response) => {
+        // console.log(response.data);
+        console.log(response.data.data);
+        setnamedb(response.data.data.Name);
+        setemaildb(response.data.data.Email);
+        setphonedb(response.data.data.PhoneNumber);
+        setgenderdb(response.data.data.Gender);
+
+        gettype(response.data.Type);
+        getname(response.data.Name);
+        getdescription(response.data.Description);
+        getprice(response.data.Price);
+        getaddress(response.data.Address);
+
+        const AllData = response.data.data;
+        getUser(AllData);
+      })
+      .catch((err) => {
+        if (err) {
+          swal("Oh No!", err.message, "error");
+        } else {
+          swal.stopLoading();
+          swal.close();
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  if (loading) {
+    return <Spinner className="spinner" animation="grow" variant="" />;
+  }
 
   return (
     <>
@@ -103,7 +194,7 @@ const EditMyhomestay = (props) => {
         className="modalAddhomestay"
         backdrop="static"
         keyboard={false}
-        dialogClassName="col-10"
+        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={props.show}
@@ -130,7 +221,15 @@ const EditMyhomestay = (props) => {
             <div className="d-flex row">
               <Form.Group className="mb-2 col-6 align-items-center justify-content-center ">
                 <FloatingLabel controlId="floatingSelect" label="Type">
-                  <Form.Select aria-label="Select Type">
+                  <Form.Select
+                    aria-label="Select Type"
+                    onChange={(e) => setField("type", e.target.value)}
+                    required
+                    isInvalid={!!errors.type}
+                    feedback={errors.type}
+                    feedbacktype="invalid"
+                  >
+                    <option value="">- choose type -</option>
                     <option value="apartment">Apartment</option>
                     <option value="house">House</option>
                     <option value="secondary unit">Secondary Unit</option>
@@ -146,15 +245,17 @@ const EditMyhomestay = (props) => {
                 className="mb-2 col-6 d-flex align-items-end justify-content-end"
               >
                 <InputGroup hasValidation>
-                  <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
+                  <InputGroup.Text id="inputGroupPrepend">Rp.</InputGroup.Text>
                   <Form.Control
                     type="number"
                     placeholder="Price"
                     aria-describedby="inputGroupPrepend"
+                    onChange={(e) => setField("price", e.target.value)}
                     required
+                    isInvalid={!!errors.price}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please write the price.
+                    {errors.price}
                   </Form.Control.Feedback>
                 </InputGroup>
               </Form.Group>
@@ -193,12 +294,18 @@ const EditMyhomestay = (props) => {
               </FloatingLabel>
             </Form.Group>
 
+            {/* Upload File */}
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Homestay Picture</Form.Label>
+              <Form.Control type="file" onChange={(e) => onImageUpload(e)} />
+            </Form.Group>
+
             <Container>
               <Form.Label>Facility :</Form.Label>
               <Row xs={1} md={3} className="g-3">
                 <Col>
                   <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Parking" />
+                    <Form.Check type="checkbox" label="Parking Area" />
                   </Form.Group>
                 </Col>
 
@@ -210,7 +317,13 @@ const EditMyhomestay = (props) => {
 
                 <Col>
                   <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Safety Box" />
+                    <Form.Check type="checkbox" label="Smart TV" />
+                  </Form.Group>
+                </Col>
+
+                <Col>
+                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="AC" />
                   </Form.Group>
                 </Col>
 
@@ -222,31 +335,37 @@ const EditMyhomestay = (props) => {
 
                 <Col>
                   <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Pool" />
-                  </Form.Group>
-                </Col>
-
-                <Col>
-                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Breakfast" />
-                  </Form.Group>
-                </Col>
-
-                <Col>
-                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Balcony" />
                   </Form.Group>
                 </Col>
 
                 <Col>
                   <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Gym" />
+                    <Form.Check type="checkbox" label="Smoke Area" />
                   </Form.Group>
                 </Col>
 
                 <Col>
                   <Form.Group className="mb-2" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Smoke Alarm" />
+                    <Form.Check type="checkbox" label="Security Camera" />
+                  </Form.Group>
+                </Col>
+
+                <Col>
+                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Pool" />
+                  </Form.Group>
+                </Col>
+
+                <Col>
+                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Internet Area" />
+                  </Form.Group>
+                </Col>
+
+                <Col>
+                  <Form.Group className="mb-2" controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Toilet" />
                   </Form.Group>
                 </Col>
               </Row>
@@ -262,11 +381,46 @@ const EditMyhomestay = (props) => {
               </Button>
 
               <Button
-                className="col-6 btAddnew"
+                className="col-6 btEdit "
                 variant="primary"
-                onClick={handleAddnew}
+                onClick={handleShowEdit}
               >
                 Edit Homestay
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      {/* Modal Confirm Edit Homestay */}
+      <Modal
+        show={showEdit}
+        onHide={handleCloseEdit}
+        backdrop="static"
+        keyboard={false}
+        // size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Body className="p-5 d-flex justify-content-center align-items-center">
+          <div>
+            <p> Are you sure to change your Homestay data ? </p>
+
+            <div className="divButton mt-5 d-flex justify-content-center align-items-center">
+              <Button
+                className="me-2 col-3 btCancel"
+                variant="secondary"
+                onClick={handleCloseEdit}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                className="col-3 btEdit"
+                variant="primary"
+                onClick={handleEdit}
+              >
+                Save
               </Button>
             </div>
           </div>
