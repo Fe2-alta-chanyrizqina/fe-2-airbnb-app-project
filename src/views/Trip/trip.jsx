@@ -7,15 +7,18 @@ import {
   Form,
   FloatingLabel,
   Modal,
+  Spinner,
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import NavLogin from "../../components/navbarLogin";
+import Navigation from "../../components/navbarLogin";
 import Footer from "../../components/footer";
 import axios from "axios";
 import "./trip.css";
 import { Navigate, useNavigate } from "react-router";
 
 const Trip = () => {
+  const [loading, setLoading] = useState(false);
   const [reservations, setReservations] = useState([]);
   const [ID, setID] = useState("");
   const [checkin, setCheckin] = useState("");
@@ -23,7 +26,10 @@ const Trip = () => {
   const [modalShow, setModalShow] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {}, [reservations]);
+
   useEffect(() => {
+    setLoading(true);
     const config = {
       headers: { Authorization: `Bearer ${localStorage.token}` },
     };
@@ -38,8 +44,11 @@ const Trip = () => {
         console.log(err.message);
         navigate(`/`);
         return <>You must log in first</>;
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [reservations]);
+  }, []);
 
   const deleteTrip = (id) => {
     const config = {
@@ -58,7 +67,9 @@ const Trip = () => {
         console.log(err.message);
       });
   };
-
+  if (loading) {
+    return <Spinner className="spinner" animation="border" variant="" />;
+  }
   const confirmationDelete = () => {
     return (
       <Modal
@@ -92,9 +103,16 @@ const Trip = () => {
     );
   };
 
+  const navSwitch = () => {
+    if (localStorage.token) {
+      return <NavLogin />;
+    }
+    return <Navigation />;
+  };
+
   return (
     <>
-      <NavLogin />
+      {navSwitch()}
       <Container>
         <h2 className="mt-5 pt-5">Trip</h2>
         <hr className="line" />

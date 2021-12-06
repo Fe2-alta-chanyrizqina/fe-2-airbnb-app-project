@@ -1,5 +1,5 @@
 import axios from "axios";
-import DatePicker from "react-datepicker";
+import LoginDetails from "../../components/loginDetails.jsx";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -291,16 +291,30 @@ const Check = (props) => {
       </div>
     );
   };
-
+  const [showLogin, setShowLogin] = useState(false);
   const gotoPayment = () => {
-    navigate(`/book/stays/${params.id}`);
-    localStorage.setItem("check_in", checkIn);
-    localStorage.setItem("check_out", checkOut);
-    localStorage.setItem("long_stay", longstay);
-    localStorage.setItem("total_price", total);
+    if (localStorage.token) {
+      navigate(`/book/stays/${params.id}`);
+      localStorage.setItem("check_in", checkIn);
+      localStorage.setItem("check_out", checkOut);
+      localStorage.setItem("long_stay", longstay);
+      localStorage.setItem("total_price", total);
+    }
+
+    setShowLogin(true);
   };
 
-  return <>{returnSwitch()}</>;
+  return (
+    <>
+      {returnSwitch()}
+      <LoginDetails
+        show={showLogin}
+        close={() => setShowLogin(false)}
+        id={params.id}
+      />
+      ;
+    </>
+  );
 };
 
 export default Check;

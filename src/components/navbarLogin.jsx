@@ -21,7 +21,7 @@ const NavLogin = () => {
   };
 
   const goToProfile = () => {
-    navigate(`/profile/${localStorage.id}`);
+    navigate(`/profile/${localStorage.getItem("id")}`);
   };
 
   const returnModalLogin = () => {
